@@ -48,7 +48,7 @@ router.post('/',(req, res) => {
     } else if (!notes) {
         res.status(400).json({error: `Need to Provide Notes`})
     } else {
-        actionDb
+        actionModel
         .insert({project_id, description, notes, completed})
         .then(newAction => {
             res.status(200).json(newAction)
@@ -62,7 +62,7 @@ router.post('/',(req, res) => {
 router.put('/:id', (req, res) => {
     const {id} = req.params;
     const {project_id, description, notes, completed} = req.body;
-    actionDb
+    actionModel
         .update(id, {project_id, description, notes, completed})
         .then(isUpdated => {
             res.status(200).json(isUpdated)
@@ -75,7 +75,7 @@ router.put('/:id', (req, res) => {
 // ----delete an action----------------
 router.delete('/:id', (req, res) => {
     const {id} = req.params
-    actionDb
+    actionModel
         .remove(id)
         .then(isRemoved => {
             res.status(500).json(isRemoved)
