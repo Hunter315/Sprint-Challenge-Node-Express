@@ -5,7 +5,7 @@ const projectModel = require("../data/helpers/projectModel");
 module.exports = router;
 // ====Project Model Routing===================================
 
-// ----get all projects----------------
+// ---- get all projects ----------------
 router.get("/", (req, res) => {
     projectModel.get()
         // When successful
@@ -17,11 +17,28 @@ router.get("/", (req, res) => {
             console.log("error", err);
             res
                 .status(500)
-                .json({ error: "The project informatin could not be retrieved"});
+                .json({ error: "The project information could not be retrieved"});
         });
 });
 
-// ----insert (create) a project----------------
+// ---- get project by id ----------------
+router.get("/:id", (req, res) => {
+    projectModel.get(req.params.id)
+        // When successful
+        .then(projects => {
+            res.status(200).json(projects);
+        })
+        // Catch an error
+        .catch(err => {
+            console.log("error", err);
+            res
+                .status(500)
+                .json({ error: "The project information could not be retrieved"});
+        });
+});
+
+
+// ---- insert (create) a project ----------------
 router.post("/", (req, res) => {
     // Maximum string length of 128 requirement on name
     if (req.body.name.length < 129) {
@@ -42,7 +59,21 @@ router.post("/", (req, res) => {
     //
 })
 
-// --------------------
+// ---- update an existing project by id ----------------
+router.put("/:id", (req, res) => {
+    //need id to pass and 'changes' being made
+    const { id } = req.params;
+    const { name, description, completed } = req.body;
+    projectModel
+        .update(id, {name, description, completed})
+        .then(isUpdated => {
+            if(!isUpdated) {
+                res.status(400).json({error: `The post with id ${id} could not be updated`})
+            } else {
+                res.status(200).json(isUpdated)
+            }
+        })
+})
 
 
 // --------------------
