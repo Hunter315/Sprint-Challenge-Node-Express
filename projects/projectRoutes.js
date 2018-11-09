@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const projectModel = require("../data/helpers/projectModel");
-
+router.use(express.json());
 module.exports = router;
+
+
 // ====Project Model Routing===================================
 
 // ---- get all projects ----------------
@@ -37,11 +39,10 @@ router.get("/:id", (req, res) => {
         });
 });
 
-
 // ---- insert (create) a project ----------------
 router.post("/", (req, res) => {
     // Maximum string length of 128 requirement on name
-    if (req.body.name.length < 129) {
+    if (req.body.name.length < 129 && req.body.description) {
         //insert by passing resource object and add to db
         projectModel.insert(req.body)
             .then(projects => {
@@ -55,6 +56,10 @@ router.post("/", (req, res) => {
                     .status(500)
                     .json({message: "The project information could not be posted"})
             })
+    } else {
+        res
+            .status(500)
+            .json({message: "Could not create post. Name must be under 128 characters. Description required"})
     }
     //
 })
@@ -78,7 +83,6 @@ router.put("/:id", (req, res) => {
         })
 })
 
-
 // ---- delete a project by id ----------------
 router.delete("/:id", (req, res) => {
     //remove function in db by using id 
@@ -93,5 +97,3 @@ router.delete("/:id", (req, res) => {
             res.status(500).json({message: "The project could not be deleted."});
         });
 });
-
-// --------------------

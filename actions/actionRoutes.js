@@ -37,3 +37,27 @@ router.get("/:id", (req, res) => {
             }
         })
 });
+
+// ----insert (create) an action----------------
+server.post('/api/actions',(req, res) => {
+    const {project_id, description, notes, completed} = req.body;
+    if (!project_id) {
+        res.status(400).json({error: `Need to Provide Project Id`})
+    } else if (!description.substr(1,128)) {
+        res.status(400).json({error: `Need to Provide Description Less than 128 Characters`})
+    } else if (!notes) {
+        res.status(400).json({error: `Need to Provide Notes`})
+    } else {
+        actionDb
+        .insert({project_id, description, notes, completed})
+        .then(newAction => {
+            res.status(200).json(newAction)
+        })
+        .catch(() => {
+            res.status(500).json({error: `Could Not Add New Action`})
+        })
+    }
+});
+// ----update an action----------------
+
+// ----delete an action----------------
