@@ -64,18 +64,34 @@ router.put("/:id", (req, res) => {
     //need id to pass and 'changes' being made
     const { id } = req.params;
     const { name, description, completed } = req.body;
+    // update project with id, and body
     projectModel
         .update(id, {name, description, completed})
         .then(isUpdated => {
+            //throw errror if project didn't update
             if(!isUpdated) {
                 res.status(400).json({error: `The post with id ${id} could not be updated`})
-            } else {
+            } else { 
+                //upon success return updated project
                 res.status(200).json(isUpdated)
             }
         })
 })
 
 
-// --------------------
+// ---- delete a project by id ----------------
+router.delete("/:id", (req, res) => {
+    //remove function in db by using id 
+    const { id } = req.params;
+    projectModel.remove(id)
+        .then(projects => {
+            //return success code with number of records deleted
+            res.status(200).json(projects);
+        })
+        .catch(err => {
+            console.log("error", err);
+            res.status(500).json({message: "The project could not be deleted."});
+        });
+});
 
 // --------------------
