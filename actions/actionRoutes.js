@@ -39,7 +39,7 @@ router.get("/:id", (req, res) => {
 });
 
 // ----insert (create) an action----------------
-server.post('/api/actions',(req, res) => {
+router.post('/',(req, res) => {
     const {project_id, description, notes, completed} = req.body;
     if (!project_id) {
         res.status(400).json({error: `Need to Provide Project Id`})
@@ -59,5 +59,28 @@ server.post('/api/actions',(req, res) => {
     }
 });
 // ----update an action----------------
+router.put('/:id', (req, res) => {
+    const {id} = req.params;
+    const {project_id, description, notes, completed} = req.body;
+    actionDb
+        .update(id, {project_id, description, notes, completed})
+        .then(isUpdated => {
+            res.status(200).json(isUpdated)
+        })
+        .catch(() => {
+            res.status(500).json({error: `Could Not Update Action at Id ${id}`})
+        })
+});
 
 // ----delete an action----------------
+router.delete('/:id', (req, res) => {
+    const {id} = req.params
+    actionDb
+        .remove(id)
+        .then(isRemoved => {
+            res.status(500).json(isRemoved)
+        })
+        .catch(() => {
+            res.status(500).json({error: `Could Not Delete Action at Id ${id}`})
+        })
+});
