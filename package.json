@@ -2,14 +2,15 @@
   "dependencies": {
     "express": "^4.16.4",
     "knex": "^0.15.2",
-    "nodemon": "^1.18.6",
     "sqlite3": "^4.0.3"
   },
   "name": "sprint-challenge-node-express",
   "description": "",
   "version": "1.0.0",
   "main": "index.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^1.18.6"
+  },
   "scripts": {
     "server": "nodemon index.js"
   },
