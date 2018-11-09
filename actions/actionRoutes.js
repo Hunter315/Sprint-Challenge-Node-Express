@@ -18,4 +18,22 @@ router.get("/", (req, res) => {
         })
 });
 
-// ----get all action information----------------
+// ----get action information by id----------------
+router.get("/:id", (req, res) => {
+    const { id } = req.params;
+    actionModel.get(id)
+        .then(projectActions => {
+            if (!projectActions) {
+                res.status(404).json({error: `There is No Project Actions with the Id ${id}`})
+            }else {
+                res.status(200).json(projectActions)
+            }
+        })
+        .catch((projectActions) => {
+            if (projectActions) {
+                res.status(404).json({error: `There is No Project Actions with the Id ${id}`})
+            }else {
+            res.status(500).json({error: `Could Not Retrieve Actions from Id ${id}`})
+            }
+        })
+});
